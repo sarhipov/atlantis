@@ -1,0 +1,9 @@
+# Terraform related files
+**/.terraform/*
+**/.idea/*
+*.backup
+kubeconfig_devops-cluster
+*.tfstate
+*.tfstate.backup
+*.lock.hcl
+*.plan
