@@ -122,6 +122,7 @@ module "eks-cluster" {
         ALBIngressControllerIAMPolicy     = aws_iam_policy.ALBIngressControllerIAMPolicy.arn
         AmazonS3_TF_StatePolicy           = aws_iam_policy.tf_state_s3_bucket_policy.arn
         AmazonDynamoDB_TF_StateLockPolicy = aws_iam_policy.tf_state_lock_dynamodb_access_policy.arn
+        AtlantisIAMPolicy                 = aws_iam_policy.AtlantisIAMPolicy.arn
       }
       protect_from_scale_in = true
     }
