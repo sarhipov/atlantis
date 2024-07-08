@@ -259,10 +259,10 @@ ingress:
   labels: { }
   # -- Check values.yaml for examples.
   annotations:
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    kubernetes.io/ingress.class: alb
+    "alb.ingress.kubernetes.io/listen-ports": "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
+    "alb.ingress.kubernetes.io/scheme": "internet-facing"
+    "alb.ingress.kubernetes.io/target-type": "ip"
+    "kubernetes.io/ingress.class": "alb"
   # -- Use / for nginx.
   path: /*
   # --  Used when several paths under the same host, with different backend services, are required.

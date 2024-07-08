@@ -67,14 +67,14 @@ resource "helm_release" "atlantis" {
   namespace        = "atlantis"
   create_namespace = true
 
-    values = [
-      templatefile("${path.module}/templates/atlantis_values.tpl", {
-        user             = local.github_access_credentials.user
-        token            = local.github_access_credentials.token
-        secret           = local.github_access_credentials.secret
-        hostname         = local.github_access_credentials.hostname
-        allowed_repos    = var.repo
-        storageClassName = "gp2"
-      })
-    ]
+  values = [
+    templatefile("${path.module}/templates/atlantis_values.tpl", {
+      user             = local.github_access_credentials.user
+      token            = local.github_access_credentials.token
+      secret           = local.github_access_credentials.secret
+      hostname         = local.github_access_credentials.hostname
+      allowed_repos    = var.repo
+      storageClassName = "gp2"
+    })
+  ]
 }
