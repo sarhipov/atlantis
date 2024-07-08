@@ -38,8 +38,7 @@ resource "aws_iam_policy" "ALBIngressControllerIAMPolicy" {
                 "ec2:DescribeVpcs",
                 "ec2:ModifyInstanceAttribute",
                 "ec2:ModifyNetworkInterfaceAttribute",
-                "ec2:RevokeSecurityGroupIngress",
-                "ec2:DescribeImages"
+                "ec2:RevokeSecurityGroupIngress"
             ],
             "Resource": "*"
         },
@@ -225,6 +224,37 @@ resource "aws_iam_policy" "tf_state_lock_dynamodb_access_policy" {
     ]
   })
 }
+
+/// IAM policy for Atlantis to perform plan/apply
+resource "aws_iam_policy" "AtlantisIAMPolicy" {
+  name        = "AtlantisIAMPolicy"
+  path        = "/"
+  description = "Managed by Terraform"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeImages",
+                "ec2:DescribeSecurityGroupRules",
+                "ec2:DescribeKeyPairs",
+                "ec2:DescribeInstanceAttribute",
+                "ec2:DescribeInstanceCreditSpecifications",
+                "ec2:ImportKeyPair",
+                "ec2:RevokeSecurityGroupEgress",
+                "ec2:AuthorizeSecurityGroupEgress",
+                "ec2:RunInstances"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
+
 
 /// IAM Users for EKS cluster
 resource "aws_iam_user" "eks-user" {
