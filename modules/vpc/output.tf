@@ -1,11 +1,19 @@
 output "vpc_info" {
-  value = aws_vpc.vpc
+  value = module.vpc
 }
 
-output "subnet_info" {
-  value = aws_subnet.subnet
+output "vpc_id" {
+  value = module.vpc.vpc_id
 }
 
-output "igw_info" {
-  value = aws_internet_gateway.main
+output "public_subnets" {
+  value = module.vpc.public_subnets
+}
+
+output "private_subnets" {
+  value = module.vpc.private_subnets
+}
+
+output "internet_gateway_id" {
+  value = module.vpc.igw_id
 }
