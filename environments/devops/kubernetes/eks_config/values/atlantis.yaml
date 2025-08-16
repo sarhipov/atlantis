@@ -1,0 +1,24 @@
+# Production Atlantis configuration for GitOps
+fullnameOverride: "atlantis"
+
+# GitHub configuration
+github:
+  user: "${user}"
+  token: "${token}"
+  secret: "${secret}"
+  hostname: "${hostname}"
+
+# Repository configuration  
+orgAllowlist: "${allowed_repos}"
+
+dataStorage: 10Gi
+storageClassName: "gp3"
+
+ingress:
+  enabled: false
+
+# Service account
+serviceAccount:
+  create: true
+  name: "${service_account}"
+  mount: true

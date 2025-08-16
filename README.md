@@ -1,64 +1,62 @@
 ## Assymptions, Notes
-### For simplicity(considered out of scope)
-* GitHub secrets stored manually in AWS Secrets manager under `github-access-credentials` (check `Preparation` store credentials step )
-* EKS cluster api-server have public access
-* Security Groups allowing access to/from 0.0.0.0/0
+### For simplicity (considered out of scope)
+  * GitHub secrets stored in AWS Parameter store as `/atlantis/github_user`, `/atlantis/github_token`, `/atlantis/github_secret`, `/atlantis/github_hostname`. NOTE, that `/atlantis/github_token` is stored in terraform.tfvars.local file (not committed to git). 
+  * EKS cluster api-server have public access
+  * Security Groups allowing access to/from 0.0.0.0/0
 
 ### Other things:
 * Atlantis granted minimum permissions (via worker IAM role) to execute `terraform plan && terraform apply`. I did test both just with ec2 state.
 * Atlantis deployed with `default` values, except the ones changed in helm(check `eks_config` state).
-* `remote-state` state creates 'terraform state S3 bucket' and 'terraform state lock DynamoDB table' should be executed first and has local state only
+* `remote-state` state creates 'terraform state S3 bucket' and should be executed first and has local state only
 * EKS users(admin and read-only) are dummy, with no permissions/policies attached
-* States are 'logically' separated (vs one state deploying everything with singe 'terraform apply')
-* DNS  zone/records, TLS certificate for ELB considered to be optional, and done as separate stand-alone state(`https`). Atlantis can be accessed via https://atlantis.topia.engineering or via NodePort
+* States are 'logically' separated (vs one state deploying everything with single 'terraform apply')
+* DNS  zone/records, TLS certificate for ELB considered to be optional, and done as separate stand-alone state(`https`). Atlantis can be accessed via ALB or via NodePort
 
-
-## Preparation
-### 1. Configure repository
-
-* Setup Git Host access credentials following official guide: https://www.runatlantis.io/docs/access-credentials.html
-
-### 2. Store credentials
-
-- Create secret with `github-access-credentials` name in Secrets Manager and store access credentials with following content.
-  Later those credentials will be used in Terraform
-  ```
-  user: <VALUE>
-  token: <VALUE>
-  secret: <VALUE>
-  host: <VALUE>
-  ```
 
 ## Terraform
-### 0. Login to AWS cli
+### 0. Login to AWS cli 
 Use Your AWS credentials (sso, etc ) to authenticate to Your AWS account
 
-### 2. Create state bucket and state lock
-* apply `remote-state` state to create
-  - terraform state S3 bucket
-  - state lock DynamoDB table
-```
+### 1. Create a state bucket
+* apply `remote-state` state to create terraform state S3 bucket
+```bash
 cd environments/devops/remote-state
 terraform init 
 terraform apply
 ```
 
-### 3. Create network
-* apply `network` state to create
-  - VPC(s) and VPC route tables
-  - subnets and subnets route tables
+### 2. Configure a repository and store credentials
+   
+* Set up Git Host access credentials following official guide: https://www.runatlantis.io/docs/access-credentials.html
+Copy token, that will be used in next step as  `github_token`
+
+### 3. Store credentials
+
+* set value of the below variable that received in a previous step
+```  
+ "atlantis/github_token" = {
+    value = "YOUR_TOKEN_HERE"
+    type  = "SecureString"
+  }
 ```
-cd environments/devops/network
+* apply `parameters` state to create secrets. 
+```bash
+cd environments/devops/parameters
+terraform init 
+terraform apply
+```
+
+### 4. Create network
+* apply `network` state to create VPC and subnetworks 
+```bash
+cd environments/devops/network/vpc
 terraform init
 terraform apply
 ```
 
-### 4. Create and configure EKS cluster
-* apply `eks` and `eks_config` to create
-  - EKS cluster amd install it's addons
-  - cert manager and aws loadbalancer controller
-  - atlantis 
-```
+### 5. Create and configure EKS cluster 
+* apply `eks` and `eks_config` state to create eks cluster, install addons and applications
+```bash
 cd environments/devops/eks
 terraform init
 terraform apply
