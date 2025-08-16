@@ -1,0 +1,1 @@
+# Security groups module moved to main.tf for Atlantis compatibility
