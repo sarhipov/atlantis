@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:*",
+        "iam:*",
+        "eks:*",
+        "ssm:GetParameter",
+        "ssm:GetParameters",
+        "ssm:GetParametersByPath",
+        "sts:GetCallerIdentity",
+        "elasticloadbalancing:*",
+        "vpc:*",
+        "logs:*",
+        "kms:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

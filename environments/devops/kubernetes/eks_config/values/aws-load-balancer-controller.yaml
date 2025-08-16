@@ -1,0 +1,13 @@
+# aws-load-balancer-controller.yaml
+fullnameOverride: "aws-load-balancer-controller"
+clusterName: "${eks_cluster_name}"
+args:
+  - --cluster-name=${eks_cluster_name}
+  - --aws-region=${aws_region}
+serviceAccount:
+  create: true
+  automountServiceAccountToken: true
+  name: "${service_account_name}"
+  labels:
+    "app.kubernetes.io/name": "aws-load-balancer-controller"
+    "app.kubernetes.io/managed-by": "terraform"
