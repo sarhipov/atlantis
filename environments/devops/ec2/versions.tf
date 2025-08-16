@@ -1,10 +1,10 @@
 terraform {
-  required_version = "~>1.8.0"
+  required_version = "~> 1.12"
   backend "s3" {
-    bucket         = "bucket-for-my-states"
-    key            = "ec2/terraform.tfstate"
-    region         = "eu-north-1"
-    dynamodb_table = "terraform-state-lock"
+    bucket       = "s3-bucket-for-terraform-states"
+    key          = "devops/ec2/terraform.tfstate"
+    region       = "eu-north-1"
+    use_lockfile = true
   }
   required_providers {
     aws = {

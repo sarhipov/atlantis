@@ -12,9 +12,16 @@ resource "aws_instance" "ec2" {
   vpc_security_group_ids      = [module.test-ec2-security-groups.aws_security_group_info["test-ec2"].id]
   associate_public_ip_address = true
 
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+    http_put_response_hop_limit = 1
+  }
+
   root_block_device {
     volume_size = 20
     volume_type = "gp3"
+    encrypted   = true
   }
 
   tags = {

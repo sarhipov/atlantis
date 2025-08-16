@@ -2,7 +2,7 @@
 environment          = "devops-tools"
 region               = "eu-north-1"
 terraform_state      = "ec2"
-tf_state_bucket_name = "bucket-for-my-states"
+tf_state_bucket_name = "s3-bucket-for-terraform-states"
 
 security_groups = {
   test-ec2 = {
