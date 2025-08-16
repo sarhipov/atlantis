@@ -3,7 +3,6 @@ environment          = "devops-tools"
 region               = "eu-north-1"
 terraform_state      = "network/vpc"
 cluster_name         = "devops-cluster"
-tf_state_bucket_name = "bucket-for-my-states"
 
 /// VPC
 vpc_configs = {
