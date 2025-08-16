@@ -1,3 +1,15 @@
+module "test-ec2-security-groups" {
+  source      = "../../../modules/security_group"
+  environment = var.environment
+  vpc_id      = data.terraform_remote_state.network.outputs.vpcs.main.vpc_id
+
+  security_groups = var.security_groups
+
+  tags = {
+    "Terraform-state" = "network/module.main-vpc-security-groups"
+  }
+}
+
 resource "aws_key_pair" "my-key" {
   key_name   = "sergei-key"
   public_key = file("${path.module}/files/sarhipov.pub")
