@@ -1,23 +1,23 @@
 ## Assymptions, Notes
 ### For simplicity (considered out of scope)
-  * GitHub secrets stored in AWS Parameter store as `/atlantis/github_user`, `/atlantis/github_token`, `/atlantis/github_secret`, `/atlantis/github_hostname`. NOTE, that `/atlantis/github_token` is stored in terraform.tfvars.local file (not committed to git). 
+  * GitHub secrets stored in AWS Parameter store as `/atlantis/github_user`, `/atlantis/github_token`, `/atlantis/github_secret`, `/atlantis/github_hostname` and token commited to git 
   * EKS cluster api-server have public access
   * Security Groups allowing access to/from 0.0.0.0/0
 
 ### Other things:
-* Atlantis granted minimum permissions (via worker IAM role) to execute `terraform plan && terraform apply`. I did test both just with ec2 state.
+* Atlantis granted minimum permissions (via worker IAM role) to execute `terraform plan && terraform apply`. 
 * Atlantis deployed with `default` values, except the ones changed in helm(check `eks_config` state).
 * `remote-state` state creates 'terraform state S3 bucket' and should be executed first and has local state only
 * EKS users(admin and read-only) are dummy, with no permissions/policies attached
 * States are 'logically' separated (vs one state deploying everything with single 'terraform apply')
-* DNS  zone/records, TLS certificate for ELB considered to be optional, and done as separate stand-alone state(`https`). Atlantis can be accessed via ALB or via NodePort
+* There is no domain for ALB. Atlantis can be accessed via ALB or via NodePort(port forwarding)
 
 
 ## Terraform
 ### 0. Login to AWS cli 
 Use Your AWS credentials (sso, etc ) to authenticate to Your AWS account
 
-### 1. Create a state bucket
+### 1. Create a state S3 bucket
 * apply `remote-state` state to create terraform state S3 bucket
 ```bash
 cd environments/devops/remote-state
@@ -26,12 +26,10 @@ terraform apply
 ```
 
 ### 2. Configure a repository and store credentials
-   
 * Set up Git Host access credentials following official guide: https://www.runatlantis.io/docs/access-credentials.html
 Copy token, that will be used in next step as  `github_token`
 
 ### 3. Store credentials
-
 * set value of the below variable that received in a previous step
 ```  
  "atlantis/github_token" = {
